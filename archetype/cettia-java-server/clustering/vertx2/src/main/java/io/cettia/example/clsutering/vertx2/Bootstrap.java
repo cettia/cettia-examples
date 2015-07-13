@@ -68,7 +68,6 @@ public class Bootstrap extends Verticle {
         server.onsocket(new Action<ServerSocket>() {
             @Override
             public void on(final ServerSocket socket) {
-                System.out.println("on socket: " + socket.uri());
                 socket.on("echo", new Action<Object>() {
                     @Override
                     public void on(Object data) {

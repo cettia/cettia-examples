@@ -4,7 +4,7 @@ Type:
 activator "run 8080"
 ```
 
-Then, open the [client](http://jsbin.com/vigiji/1/watch?js,console) in your browser.
+Then, open the [client](http://jsbin.com/lelaba/1/watch?js,console) in your browser.
 
 **Note**
 
