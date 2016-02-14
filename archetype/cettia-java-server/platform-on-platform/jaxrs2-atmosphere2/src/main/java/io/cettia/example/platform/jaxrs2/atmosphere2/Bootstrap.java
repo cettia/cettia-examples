@@ -3,14 +3,11 @@ package io.cettia.example.platform.jaxrs2.atmosphere2;
 import io.cettia.DefaultServer;
 import io.cettia.Server;
 import io.cettia.ServerSocket;
-import io.cettia.platform.action.Action;
-import io.cettia.platform.bridge.atmosphere2.CettiaAtmosphereServlet;
+import io.cettia.asity.action.Action;
+import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import org.atmosphere.cpr.ApplicationConfig;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -22,62 +19,67 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-
-import org.atmosphere.cpr.ApplicationConfig;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @WebListener
 public class Bootstrap implements ServletContextListener {
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-        final Server server = new DefaultServer();
-        server.onsocket(new Action<ServerSocket>() {
-            @Override
-            public void on(final ServerSocket socket) {
-                socket.on("echo", new Action<Object>() {
-                    @Override
-                    public void on(Object data) {
-                        System.out.println("on echo event: " + data);
-                        socket.send("echo", data);
-                    }
-                });
-                socket.on("chat", new Action<Object>() {
-                    @Override
-                    public void on(Object data) {
-                        System.out.println("on chat event: " + data);
-                        server.all().send("chat", data);
-                    }
-                });
-            }
+  @Override
+  public void contextInitialized(ServletContextEvent event) {
+    final Server server = new DefaultServer();
+    server.onsocket(new Action<ServerSocket>() {
+      @Override
+      public void on(final ServerSocket socket) {
+        socket.on("echo", new Action<Object>() {
+          @Override
+          public void on(Object data) {
+            System.out.println("on echo event: " + data);
+            socket.send("echo", data);
+          }
         });
+        socket.on("chat", new Action<Object>() {
+          @Override
+          public void on(Object data) {
+            System.out.println("on chat event: " + data);
+            server.all().send("chat", data);
+          }
+        });
+      }
+    });
 
-        HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
-        WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport(server);
+    HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
+    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport(server);
 
-        ServletContext context = event.getServletContext();
-        Servlet servlet = new CettiaAtmosphereServlet().onhttp(httpTransportServer).onwebsocket(wsTransportServer);
-        ServletRegistration.Dynamic reg = context.addServlet(CettiaAtmosphereServlet.class.getName(), servlet);
-        reg.setAsyncSupported(true);
-        reg.setInitParameter(ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTOR, Boolean.TRUE.toString());
-        reg.addMapping("/cettia");
-        
-        // Put server into application scope for JAX-RS resource to use it.
-        // Otherwise, use dependency-injection service
-        context.setAttribute(Server.class.getName(), server);
-        // To test it's working, trigger JAX-RS resource every 3 seconds
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                tick();
-            }
-        }, 0, 3, TimeUnit.SECONDS);
-    }
+    ServletContext context = event.getServletContext();
+    Servlet servlet = new AsityAtmosphereServlet().onhttp(httpTransportServer).onwebsocket
+      (wsTransportServer);
+    ServletRegistration.Dynamic reg = context.addServlet(AsityAtmosphereServlet.class.getName(),
+      servlet);
+    reg.setAsyncSupported(true);
+    reg.setInitParameter(ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTOR, Boolean.TRUE.toString());
+    reg.addMapping("/cettia");
 
-    private void tick() {
-        Client client = ClientBuilder.newClient();
-        client.target("http://localhost:8080/jaxrs").path("broadcast").request().post(Entity.entity("tick: " + System.currentTimeMillis(), MediaType.TEXT_PLAIN));
-    }
+    // Put server into application scope for JAX-RS resource to use it.
+    // Otherwise, use dependency-injection service
+    context.setAttribute(Server.class.getName(), server);
+    // To test it's working, trigger JAX-RS resource every 3 seconds
+    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    executor.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        tick();
+      }
+    }, 0, 3, TimeUnit.SECONDS);
+  }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {}
+  private void tick() {
+    Client client = ClientBuilder.newClient();
+    client.target("http://localhost:8080/jaxrs").path("broadcast").request().post(Entity.entity
+      ("tick: " + System.currentTimeMillis(), MediaType.TEXT_PLAIN));
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent sce) {
+  }
 }

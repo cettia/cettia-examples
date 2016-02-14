@@ -1,13 +1,14 @@
-<configuration xmlns="urn:hornetq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:hornetq /schema/hornetq-jms.xsd">
-    <connection-factory name="ConnectionFactory">
-        <connectors>
-            <connector-ref connector-name="netty-connector" />
-        </connectors>
-        <entries>
-            <entry name="ConnectionFactory" />
-        </entries>
-    </connection-factory>
-    <topic name="cettia">
-        <entry name="topic/cettia" />
-    </topic>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:hornetq"
+               xsi:schemaLocation="urn:hornetq /schema/hornetq-jms.xsd">
+  <connection-factory name="ConnectionFactory">
+    <connectors>
+      <connector-ref connector-name="netty-connector" />
+    </connectors>
+    <entries>
+      <entry name="ConnectionFactory" />
+    </entries>
+  </connection-factory>
+  <topic name="cettia">
+    <entry name="topic/cettia" />
+  </topic>
 </configuration>
