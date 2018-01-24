@@ -10,7 +10,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-    <cettia.server.version>1.0.0-Beta1</cettia.server.version>
+    <cettia.server.version>1.0.0-RC1</cettia.server.version>
     <asity.version>1.0.0-Beta1</asity.version>
   </properties>
   <dependencies>
@@ -40,21 +40,6 @@
       <artifactId>javax.websocket-api</artifactId>
       <version>1.0</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.msgpack</groupId>
-      <artifactId>jackson-dataformat-msgpack</artifactId>
-      <version>0.8.3</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.7.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.7.2</version>
     </dependency>
   </dependencies>
   <build>
