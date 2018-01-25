@@ -1,7 +1,7 @@
 Type:
 
 ```
-mvn package vertx:runMod -Dvertx.port=8080
+mvn clean package vertx:runMod -Dvertx.port=8080
 ```
 
 And in another console
