@@ -50,29 +50,22 @@ public class Bootstrap implements ServletContextListener {
       connection.start();
       // Receives a message
       TopicSubscriber subscriber = session.createSubscriber(topic);
-      subscriber.setMessageListener(new MessageListener() {
-        @SuppressWarnings("unchecked")
-        @Override
-        public void onMessage(Message message) {
-          try {
-            System.out.println("receiving a message: " + message.getBody(Map.class));
-            server.messageAction().on(message.getBody(Map.class));
-          } catch (JMSException e) {
-            throw new RuntimeException(e);
-          }
+      subscriber.setMessageListener(message -> {
+        try {
+          System.out.println("receiving a message: " + message.getBody(Map.class));
+          server.messageAction().on(message.getBody(Map.class));
+        } catch (JMSException e) {
+          throw new RuntimeException(e);
         }
       });
       // Publishes a message
       final TopicPublisher publisher = session.createPublisher(topic);
-      server.onpublish(new Action<Map<String, Object>>() {
-        @Override
-        public void on(Map<String, Object> message) {
-          System.out.println("publishing a message: " + message);
-          try {
-            publisher.publish(session.createObjectMessage((Serializable) message));
-          } catch (JMSException e) {
-            throw new RuntimeException(e);
-          }
+      server.onpublish(message -> {
+        System.out.println("publishing a message: " + message);
+        try {
+          publisher.publish(session.createObjectMessage((Serializable) message));
+        } catch (JMSException e) {
+          throw new RuntimeException(e);
         }
       });
     } catch (JMSException e) {
@@ -81,24 +74,15 @@ public class Bootstrap implements ServletContextListener {
       throw new RuntimeException(e);
     }
 
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo event: " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat event: " + data);
+        server.all().send("chat", data);
+      });
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);

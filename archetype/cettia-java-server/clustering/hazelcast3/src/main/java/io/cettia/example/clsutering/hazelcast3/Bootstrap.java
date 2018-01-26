@@ -30,40 +30,25 @@ public class Bootstrap implements ServletContextListener {
     HazelcastInstance hazelcast = HazelcastInstanceFactory.newHazelcastInstance(new Config());
     final ITopic<Map<String, Object>> topic = hazelcast.getTopic("cettia");
     // Receives a message
-    topic.addMessageListener(new MessageListener<Map<String, Object>>() {
-      @Override
-      public void onMessage(Message<Map<String, Object>> message) {
-        System.out.println("receiving a message: " + message.getMessageObject());
-        server.messageAction().on(message.getMessageObject());
-      }
+    topic.addMessageListener(message -> {
+      System.out.println("receiving a message: " + message.getMessageObject());
+      server.messageAction().on(message.getMessageObject());
     });
     // Publishes a message
-    server.onpublish(new Action<Map<String, Object>>() {
-      @Override
-      public void on(Map<String, Object> message) {
-        System.out.println("publishing a message: " + message);
-        topic.publish(message);
-      }
+    server.onpublish(message -> {
+      System.out.println("publishing a message: " + message);
+      topic.publish(message);
     });
 
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo event: " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat event: " + data);
+        server.all().send("chat", data);
+      });
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);

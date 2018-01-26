@@ -41,15 +41,12 @@ public class Bootstrap implements ServletContextListener {
       }
     });
     // Publishes a message
-    server.onpublish(new Action<Map<String, Object>>() {
-      @Override
-      public void on(Map<String, Object> message) {
-        System.out.println("publishing a message: " + message);
-        try {
-          channel.send(new Message(null, message));
-        } catch (Exception e) {
-          throw new RuntimeException(e);
-        }
+    server.onpublish(message -> {
+      System.out.println("publishing a message: " + message);
+      try {
+        channel.send(new Message(null, message));
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     });
     try {
@@ -58,24 +55,15 @@ public class Bootstrap implements ServletContextListener {
       throw new RuntimeException(e);
     }
 
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo event: " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat event: " + data);
+        server.all().send("chat", data);
+      });
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);

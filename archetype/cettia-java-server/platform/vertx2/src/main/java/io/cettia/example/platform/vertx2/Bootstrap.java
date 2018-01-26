@@ -17,24 +17,15 @@ public class Bootstrap extends Verticle {
   @Override
   public void start() {
     final Server server = new DefaultServer();
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo event: " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat event: " + data);
+        server.all().send("chat", data);
+      });
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
@@ -46,12 +37,9 @@ public class Bootstrap extends Verticle {
     httpServer.requestHandler(httpMatcher);
     final AsityWebSocketHandler websocketHandler = new AsityWebSocketHandler().onwebsocket
       (wsTransportServer);
-    httpServer.websocketHandler(new Handler<org.vertx.java.core.http.ServerWebSocket>() {
-      @Override
-      public void handle(org.vertx.java.core.http.ServerWebSocket socket) {
-        if (socket.path().equals("/cettia")) {
-          websocketHandler.handle(socket);
-        }
+    httpServer.websocketHandler(socket -> {
+      if (socket.path().equals("/cettia")) {
+        websocketHandler.handle(socket);
       }
     });
     httpServer.listen(8080);

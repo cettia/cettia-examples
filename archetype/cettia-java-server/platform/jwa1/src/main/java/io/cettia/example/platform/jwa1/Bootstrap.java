@@ -18,24 +18,15 @@ public class Bootstrap implements ServerApplicationConfig {
   @Override
   public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> _) {
     final Server server = new DefaultServer();
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo event: " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat event: " + data);
+        server.all().send("chat", data);
+      });
     });
 
     final WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport

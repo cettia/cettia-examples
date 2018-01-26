@@ -20,12 +20,7 @@ public class Clock {
   @PostConstruct
   public void init() {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    executor.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        tick();
-      }
-    }, 0, 3, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(() -> tick(), 0, 3, TimeUnit.SECONDS);
   }
 
   public void tick() {
