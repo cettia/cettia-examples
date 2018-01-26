@@ -8,8 +8,8 @@
   <!--     <packaging>war</packaging> -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <cettia.server.version>1.0.0-RC1</cettia.server.version>
     <asity.version>1.0.0-Beta1</asity.version>
   </properties>
