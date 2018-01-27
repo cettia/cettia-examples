@@ -14,7 +14,5 @@ Then, open two [clients](http://jsbin.com/mohumifeko/1/edit?html,js,console) con
 
 **Note**
 
-
-* Although this example uses Atmosphere platform, you can use JMS with any platform.
 * HornetQ 2 is used as an implementation of JMS.
 * You need to run HornetQ server by `mvn hornetq:start` first.

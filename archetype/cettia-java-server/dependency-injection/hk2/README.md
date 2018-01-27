@@ -8,5 +8,4 @@ Then, open the [client](http://jsbin.com/mohumifeko/1/edit?html,js,console) in y
 
 **Note**
 
-* Though this example uses Atmosphere platform, you can use HK2 with any platform.
 * Somehow HK2 doesn't work with war packaging.

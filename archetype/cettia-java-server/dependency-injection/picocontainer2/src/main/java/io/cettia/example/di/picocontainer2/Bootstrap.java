@@ -2,10 +2,10 @@ package io.cettia.example.di.picocontainer2;
 
 import io.cettia.DefaultServer;
 import io.cettia.Server;
-import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
+import io.cettia.asity.bridge.jwa1.AsityServerEndpoint;
+import io.cettia.asity.bridge.servlet3.AsityServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
-import org.atmosphere.cpr.ApplicationConfig;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.PicoBuilder;
 
@@ -15,6 +15,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
+import javax.websocket.DeploymentException;
+import javax.websocket.server.ServerContainer;
+import javax.websocket.server.ServerEndpointConfig;
 
 @WebListener
 public class Bootstrap implements ServletContextListener {
@@ -39,17 +42,32 @@ public class Bootstrap implements ServletContextListener {
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
-    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport(server);
-
-    // Installs the server on Atmosphere platform
+    // Servlet
     ServletContext context = event.getServletContext();
-    Servlet servlet = new AsityAtmosphereServlet().onhttp(httpTransportServer).onwebsocket
-      (wsTransportServer);
-    ServletRegistration.Dynamic reg = context.addServlet(AsityAtmosphereServlet.class.getName(),
-      servlet);
+    Servlet servlet = new AsityServlet().onhttp(httpTransportServer);
+    ServletRegistration.Dynamic reg = context.addServlet(AsityServlet.class.getName(), servlet);
     reg.setAsyncSupported(true);
-    reg.setInitParameter(ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTOR, Boolean.TRUE.toString());
     reg.addMapping("/cettia");
+
+    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
+      (server);
+    // Java WebSocket API
+    ServerContainer container = (ServerContainer) context.getAttribute(ServerContainer.class
+      .getName());
+    ServerEndpointConfig config = ServerEndpointConfig.Builder.create(AsityServerEndpoint.class,
+      "/cettia")
+      .configurator(new ServerEndpointConfig.Configurator() {
+        @Override
+        public <T> T getEndpointInstance(Class<T> endpointClass) throws InstantiationException {
+          return endpointClass.cast(new AsityServerEndpoint().onwebsocket(wsTransportServer));
+        }
+      })
+      .build();
+    try {
+      container.addEndpoint(config);
+    } catch (DeploymentException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

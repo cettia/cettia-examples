@@ -21,18 +21,24 @@
     </dependency>
     <dependency>
       <groupId>io.cettia.asity</groupId>
-      <artifactId>asity-bridge-atmosphere2</artifactId>
+      <artifactId>asity-bridge-servlet3</artifactId>
       <version>${asity.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.atmosphere</groupId>
-      <artifactId>atmosphere-runtime</artifactId>
-      <version>2.3.6</version>
+      <groupId>io.cettia.asity</groupId>
+      <artifactId>asity-bridge-jwa1</artifactId>
+      <version>${asity.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.websocket</groupId>
+      <artifactId>javax.websocket-api</artifactId>
+      <version>1.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

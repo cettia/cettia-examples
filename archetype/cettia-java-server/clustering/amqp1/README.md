@@ -14,6 +14,5 @@ Then, open two [clients](http://jsbin.com/mohumifeko/1/edit?html,js,console) con
 
 **Note**
 
-* Although this example uses Atmosphere platform, you can use AMQP with any platform.
 * RabbitMQ 3 is used as an implementation of AMQP.
 * You need to run RabbitMQ broker first.

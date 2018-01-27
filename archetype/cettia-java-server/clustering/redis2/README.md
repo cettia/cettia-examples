@@ -14,5 +14,4 @@ Then, open two [clients](http://jsbin.com/mohumifeko/1/edit?html,js,console) con
 
 **Note**
 
-* Although this example uses Atmosphere platform, you can use Redis with any platform.
 * You need to run Redis instance running on `localhost` at port `6379` first.
