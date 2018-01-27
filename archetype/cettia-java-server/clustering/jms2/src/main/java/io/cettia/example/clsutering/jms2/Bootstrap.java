@@ -1,16 +1,12 @@
 package io.cettia.example.clsutering.jms2;
 
 import io.cettia.ClusteredServer;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
 import org.atmosphere.cpr.ApplicationConfig;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicConnection;
@@ -76,11 +72,11 @@ public class Bootstrap implements ServletContextListener {
 
     server.onsocket(socket -> {
       socket.on("echo", data -> {
-        System.out.println("on echo event: " + data);
+        System.out.println("on echo " + data);
         socket.send("echo", data);
       });
       socket.on("chat", data -> {
-        System.out.println("on chat event: " + data);
+        System.out.println("on chat " + data);
         server.all().send("chat", data);
       });
     });

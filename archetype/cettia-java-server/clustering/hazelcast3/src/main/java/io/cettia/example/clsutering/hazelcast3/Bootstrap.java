@@ -3,12 +3,8 @@ package io.cettia.example.clsutering.hazelcast3;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ITopic;
-import com.hazelcast.core.Message;
-import com.hazelcast.core.MessageListener;
 import com.hazelcast.instance.HazelcastInstanceFactory;
 import io.cettia.ClusteredServer;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
@@ -26,9 +22,9 @@ import java.util.Map;
 public class Bootstrap implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final ClusteredServer server = new ClusteredServer();
+    ClusteredServer server = new ClusteredServer();
     HazelcastInstance hazelcast = HazelcastInstanceFactory.newHazelcastInstance(new Config());
-    final ITopic<Map<String, Object>> topic = hazelcast.getTopic("cettia");
+    ITopic<Map<String, Object>> topic = hazelcast.getTopic("cettia");
     // Receives a message
     topic.addMessageListener(message -> {
       System.out.println("receiving a message: " + message.getMessageObject());
@@ -42,11 +38,11 @@ public class Bootstrap implements ServletContextListener {
 
     server.onsocket(socket -> {
       socket.on("echo", data -> {
-        System.out.println("on echo event: " + data);
+        System.out.println("on echo " + data);
         socket.send("echo", data);
       });
       socket.on("chat", data -> {
-        System.out.println("on chat event: " + data);
+        System.out.println("on chat " + data);
         server.all().send("chat", data);
       });
     });

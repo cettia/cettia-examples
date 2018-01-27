@@ -1,8 +1,6 @@
 package io.cettia.example.clsutering.redis2;
 
 import io.cettia.ClusteredServer;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
@@ -87,11 +85,11 @@ public class Bootstrap implements ServletContextListener {
 
     server.onsocket(socket -> {
       socket.on("echo", data -> {
-        System.out.println("on echo event: " + data);
+        System.out.println("on echo " + data);
         socket.send("echo", data);
       });
       socket.on("chat", data -> {
-        System.out.println("on chat event: " + data);
+        System.out.println("on chat " + data);
         server.all().send("chat", data);
       });
     });

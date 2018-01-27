@@ -2,8 +2,6 @@ package io.cettia.example.platform.jaxrs2.atmosphere2;
 
 import io.cettia.DefaultServer;
 import io.cettia.Server;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.atmosphere2.AsityAtmosphereServlet;
 import io.cettia.transport.http.HttpTransportServer;
 import io.cettia.transport.websocket.WebSocketTransportServer;
@@ -27,25 +25,16 @@ import java.util.concurrent.TimeUnit;
 public class Bootstrap implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final Server server = new DefaultServer();
-    server.onsocket(new Action<ServerSocket>() {
-      @Override
-      public void on(final ServerSocket socket) {
-        socket.on("echo", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on echo event: " + data);
-            socket.send("echo", data);
-          }
-        });
-        socket.on("chat", new Action<Object>() {
-          @Override
-          public void on(Object data) {
-            System.out.println("on chat event: " + data);
-            server.all().send("chat", data);
-          }
-        });
-      }
+    Server server = new DefaultServer();
+    server.onsocket(socket -> {
+      socket.on("echo", data -> {
+        System.out.println("on echo " + data);
+        socket.send("echo", data);
+      });
+      socket.on("chat", data -> {
+        System.out.println("on chat " + data);
+        server.all().send("chat", data);
+      });
     });
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
@@ -65,12 +54,7 @@ public class Bootstrap implements ServletContextListener {
     context.setAttribute(Server.class.getName(), server);
     // To test it's working, trigger JAX-RS resource every 3 seconds
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    executor.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        tick();
-      }
-    }, 0, 3, TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(() -> tick(), 0, 3, TimeUnit.SECONDS);
   }
 
   private void tick() {

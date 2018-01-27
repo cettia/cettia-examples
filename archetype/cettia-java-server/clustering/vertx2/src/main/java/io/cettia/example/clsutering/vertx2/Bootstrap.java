@@ -1,8 +1,6 @@
 package io.cettia.example.clsutering.vertx2;
 
 import io.cettia.ClusteredServer;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.vertx2.AsityRequestHandler;
 import io.cettia.asity.bridge.vertx2.AsityWebSocketHandler;
 import io.cettia.transport.http.HttpTransportServer;
@@ -60,11 +58,11 @@ public class Bootstrap extends Verticle {
 
     server.onsocket(socket -> {
       socket.on("echo", data -> {
-        System.out.println("on echo event: " + data);
+        System.out.println("on echo " + data);
         socket.send("echo", data);
       });
       socket.on("chat", data -> {
-        System.out.println("on chat event: " + data);
+        System.out.println("on chat " + data);
         server.all().send("chat", data);
       });
     });

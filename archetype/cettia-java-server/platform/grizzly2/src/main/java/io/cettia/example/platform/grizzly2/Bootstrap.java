@@ -2,8 +2,6 @@ package io.cettia.example.platform.grizzly2;
 
 import io.cettia.DefaultServer;
 import io.cettia.Server;
-import io.cettia.ServerSocket;
-import io.cettia.asity.action.Action;
 import io.cettia.asity.bridge.grizzly2.AsityHttpHandler;
 import io.cettia.asity.bridge.grizzly2.AsityWebSocketApplication;
 import io.cettia.transport.http.HttpTransportServer;
@@ -16,14 +14,14 @@ import org.glassfish.grizzly.websockets.WebSocketEngine;
 
 public class Bootstrap {
   public static void main(String[] args) throws Exception {
-    final Server server = new DefaultServer();
+    Server server = new DefaultServer();
     server.onsocket(socket -> {
       socket.on("echo", data -> {
-        System.out.println("on echo event: " + data);
+        System.out.println("on echo " + data);
         socket.send("echo", data);
       });
       socket.on("chat", data -> {
-        System.out.println("on chat event: " + data);
+        System.out.println("on chat " + data);
         server.all().send("chat", data);
       });
     });

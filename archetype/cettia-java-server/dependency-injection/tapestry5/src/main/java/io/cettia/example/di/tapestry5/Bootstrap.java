@@ -23,7 +23,7 @@ public class Bootstrap implements ServletContextListener {
     builder.add(TapestryModule.class);
     Registry registry = builder.build();
     registry.performRegistryStartup();
-    final Server server = registry.getService(Server.class);
+    Server server = registry.getService(Server.class);
 
     HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
     WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport(server);
