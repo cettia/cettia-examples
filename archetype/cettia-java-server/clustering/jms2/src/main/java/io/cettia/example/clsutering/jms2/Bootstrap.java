@@ -30,7 +30,7 @@ import java.util.Properties;
 public class Bootstrap implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final ClusteredServer server = new ClusteredServer();
+    ClusteredServer server = new ClusteredServer();
     try {
       // Set by HornetQ standalone server
       Properties props = new Properties();
@@ -42,7 +42,7 @@ public class Bootstrap implements ServletContextListener {
         ("ConnectionFactory");
       Topic topic = (Topic) initialContext.lookup("topic/cettia");
       TopicConnection connection = connectionFactory.createTopicConnection();
-      final TopicSession session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+      TopicSession session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
       connection.start();
       // Receives a message
       TopicSubscriber subscriber = session.createSubscriber(topic);
@@ -55,7 +55,7 @@ public class Bootstrap implements ServletContextListener {
         }
       });
       // Publishes a message
-      final TopicPublisher publisher = session.createPublisher(topic);
+      TopicPublisher publisher = session.createPublisher(topic);
       server.onpublish(message -> {
         System.out.println("publishing a message: " + message);
         try {

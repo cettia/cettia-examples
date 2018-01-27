@@ -22,8 +22,8 @@ public class Bootstrap implements ServletContextListener {
   @SuppressWarnings({"resource"})
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final ClusteredServer server = new ClusteredServer();
-    final JChannel channel;
+    ClusteredServer server = new ClusteredServer();
+    JChannel channel;
     try {
       channel = new JChannel();
     } catch (Exception e) {

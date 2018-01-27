@@ -22,10 +22,10 @@ import java.util.Map;
 public class Bootstrap extends Verticle {
   @Override
   public void start() {
-    final ClusteredServer server = new ClusteredServer();
+    ClusteredServer server = new ClusteredServer();
     // You need to set cluster configuration from vertx-maven-plugin to true to enable
     // distributed event bus
-    final EventBus eventBus = vertx.eventBus();
+    EventBus eventBus = vertx.eventBus();
     // Receives a message
     eventBus.registerHandler("cettia", (Handler<Message<byte[]>>) message -> {
       // Message's body's type bytes generated from Map object
@@ -74,7 +74,7 @@ public class Bootstrap extends Verticle {
     RouteMatcher httpMatcher = new RouteMatcher();
     httpMatcher.all("/cettia", new AsityRequestHandler().onhttp(httpTransportServer));
     httpServer.requestHandler(httpMatcher);
-    final AsityWebSocketHandler websocketHandler = new AsityWebSocketHandler().onwebsocket
+    AsityWebSocketHandler websocketHandler = new AsityWebSocketHandler().onwebsocket
       (wsTransportServer);
     httpServer.websocketHandler(socket -> {
       if (socket.path().equals("/cettia")) {

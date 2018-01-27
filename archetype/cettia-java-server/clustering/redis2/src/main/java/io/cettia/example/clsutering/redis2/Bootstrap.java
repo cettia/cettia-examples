@@ -25,32 +25,12 @@ import java.util.Map;
 public class Bootstrap implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final ClusteredServer server = new ClusteredServer();
+    ClusteredServer server = new ClusteredServer();
     // Receives a message
     new Thread(() -> {
       @SuppressWarnings("resource")
       Jedis jedis = new Jedis("localhost");
       jedis.subscribe(new BinaryJedisPubSub() {
-        @Override
-        public void onUnsubscribe(byte[] channel, int subscribedChannels) {
-        }
-
-        @Override
-        public void onSubscribe(byte[] channel, int subscribedChannels) {
-        }
-
-        @Override
-        public void onPUnsubscribe(byte[] pattern, int subscribedChannels) {
-        }
-
-        @Override
-        public void onPSubscribe(byte[] pattern, int subscribedChannels) {
-        }
-
-        @Override
-        public void onPMessage(byte[] pattern, byte[] channel, byte[] message) {
-        }
-
         @SuppressWarnings("unchecked")
         @Override
         public void onMessage(byte[] channel, byte[] message) {

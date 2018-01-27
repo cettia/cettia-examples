@@ -42,7 +42,7 @@ public class Bootstrap implements ServletContextListener {
     reg.setAsyncSupported(true);
     reg.addMapping("/cettia");
 
-    final WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
+    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
       (server);
     // Java WebSocket API
     ServerContainer container = (ServerContainer) context.getAttribute(ServerContainer.class

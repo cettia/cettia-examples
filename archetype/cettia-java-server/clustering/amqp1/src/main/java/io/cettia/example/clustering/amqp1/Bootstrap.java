@@ -30,11 +30,11 @@ import java.util.Map;
 public class Bootstrap implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent event) {
-    final ClusteredServer server = new ClusteredServer();
+    ClusteredServer server = new ClusteredServer();
     try {
       ConnectionFactory connectionFactory = new ConnectionFactory();
       Connection connection = connectionFactory.newConnection();
-      final Channel channel = connection.createChannel();
+      Channel channel = connection.createChannel();
       channel.exchangeDeclare("cettia", "topic");
       String queue = channel.queueDeclare().getQueue();
       channel.queueBind(queue, "cettia", "server");

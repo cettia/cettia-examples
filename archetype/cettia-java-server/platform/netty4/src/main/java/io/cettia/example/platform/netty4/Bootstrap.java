@@ -32,8 +32,8 @@ public class Bootstrap {
       });
     });
 
-    final HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
-    final WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
+    HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
+    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
       (server);
 
     EventLoopGroup bossGroup = new NioEventLoopGroup();

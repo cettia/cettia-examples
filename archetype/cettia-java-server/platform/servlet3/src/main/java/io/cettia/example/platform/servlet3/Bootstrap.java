@@ -29,7 +29,7 @@ public class Bootstrap implements ServletContextListener {
       });
     });
 
-    final HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
+    HttpTransportServer httpTransportServer = new HttpTransportServer().ontransport(server);
     ServletContext context = event.getServletContext();
     Servlet servlet = new AsityServlet().onhttp(http -> {
       // Ignores WebSocket handshake request

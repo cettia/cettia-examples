@@ -32,7 +32,7 @@ public class Bootstrap extends Verticle {
     RouteMatcher httpMatcher = new RouteMatcher();
     httpMatcher.all("/cettia", new AsityRequestHandler().onhttp(httpTransportServer));
     httpServer.requestHandler(httpMatcher);
-    final AsityWebSocketHandler websocketHandler = new AsityWebSocketHandler().onwebsocket
+    AsityWebSocketHandler websocketHandler = new AsityWebSocketHandler().onwebsocket
       (wsTransportServer);
     httpServer.websocketHandler(socket -> {
       if (socket.path().equals("/cettia")) {

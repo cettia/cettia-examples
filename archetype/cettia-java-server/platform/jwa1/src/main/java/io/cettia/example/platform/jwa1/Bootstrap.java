@@ -27,7 +27,7 @@ public class Bootstrap implements ServerApplicationConfig {
       });
     });
 
-    final WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
+    WebSocketTransportServer wsTransportServer = new WebSocketTransportServer().ontransport
       (server);
     ServerEndpointConfig config = ServerEndpointConfig.Builder.create(AsityServerEndpoint.class,
       "/cettia")
