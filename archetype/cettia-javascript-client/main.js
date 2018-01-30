@@ -2,13 +2,13 @@ var cettia = require("cettia-client");
 var socket = cettia.open("http://localhost:8080/cettia", {reconnect: false});
 
 // Lifecycle events
+// When the selected transport starts connecting to the server
+socket.on("connecting", function() {
+    console.log("on connecting");
+});
 // When the server issues a new id for this socket as the beginning of the lifecycle and the end of the previous lifecycle
 socket.on("new", function() {
   console.log("on new");
-});
-// When the selected transport starts connecting to the server
-socket.on("connecting", function() {
-  console.log("on connecting");
 });
 // When the connection is established successfully
 socket.on("open", function() {
